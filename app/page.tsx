@@ -31,7 +31,8 @@ export default function Home() {
               Contact
             </Link>
           </nav>
-          <Button>Get Started</Button>
+          <Link href="#contact" className="text-sm font-medium hover:text-primary"><Button >Get Started</Button></Link>
+          
         </div>
       </header>
       <main className="flex-1">
@@ -47,10 +48,14 @@ export default function Home() {
                   Empowering SMEs and industries through technology, digital integration and strategic service.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg">
-                    Explore Our Services
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                                  
+                  <Button asChild size="lg">
+                    <Link href="#services">
+                      Explore Our Services
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
                   </Button>
+                  
                   <Button variant="outline" size="lg">
                     Contact Us
                   </Button>
