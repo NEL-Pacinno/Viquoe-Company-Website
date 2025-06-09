@@ -3,6 +3,7 @@ import React from "react"
 import { useState } from "react"
 import { ArrowRight, CheckCircle2, Code, LineChart, Lightbulb, Rocket, Server, Users, Menu, X, Mail, Phone, MapPin, Star } from "lucide-react"
 import { isWeb3Available } from '../utils/web3'
+import TallyEmbed from '@/components/tally-embed';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'outline' | 'ghost'
@@ -540,11 +541,17 @@ export default function Home() {
               
               <Card className="p-6">
                 <CardHeader className="pb-4">
-                  <CardTitle>Quick Contact</CardTitle>
+                  <CardTitle>Contact Us</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form className="space-y-4">
-                    <input 
+                    <TallyEmbed 
+                    formId="wd4D5r"
+                    width="40%"
+                    height="400px"
+                    className="w-full max-w-3xl mx-auto shadow-lg"
+                    />
+                    {/* <input 
                       type="text" 
                       placeholder="Your Name"
                       className="w-full p-3 border border-input rounded-md bg-background"
@@ -562,12 +569,22 @@ export default function Home() {
                     <Button className="w-full">
                       Send Message
                       <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    </Button> */}
                   </form>
                 </CardContent>
               </Card>
             </div>
           </div>
+        </section>
+
+       <section className="my-12">
+          {/* <h2 className="text-2xl font-bold mb-6">Contact Us</h2> */}
+          {/* <TallyEmbed 
+            formId="wd4D5r"
+            width="100%"
+            height="600px"
+            className="w-full max-w-3xl mx-auto shadow-lg"
+          /> */}
         </section>
       </main>
 
@@ -575,8 +592,7 @@ export default function Home() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2 font-bold text-xl">
-              <Rocket className="h-6 w-6 text-primary" />
-              <span>Viquoe</span>
+  
             </div>
             <p className="text-sm text-muted-foreground">
               © 2025 Viquoe. All rights reserved. Empowering businesses through technology.
@@ -611,4 +627,17 @@ export default function Home() {
       `}</style>
     </div>
   )
+}
+
+// Add these interfaces near the top of the file
+interface ContactFormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
+interface ContactFormStatus {
+  loading: boolean;
+  success: boolean;
+  error: null | string | Record<string, string>;
 }
