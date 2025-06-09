@@ -1,6 +1,5 @@
 "use client"
 
-import React from "react"
 import { useState } from "react"
 import { ArrowRight, CheckCircle2, Code, LineChart, Lightbulb, Rocket, Server, Users, Menu, X, Mail, Phone, MapPin, Star } from "lucide-react"
 
