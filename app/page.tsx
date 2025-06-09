@@ -546,10 +546,9 @@ export default function Home() {
                 <CardContent>
                   <form className="space-y-4">
                     <TallyEmbed 
-                    formId="wd4D5r"
-                    width="40%"
-                    height="400px"
-                    className="w-full max-w-3xl mx-auto shadow-lg"
+                      formId="wd4D5r"
+                      height="500px"
+                      className="w-full bg-background shadow-sm hover:shadow-md transition-shadow dark:border-gray-800"
                     />
                     {/* <input 
                       type="text" 

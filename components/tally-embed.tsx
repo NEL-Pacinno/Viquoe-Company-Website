@@ -11,12 +11,11 @@ interface TallyEmbedProps {
 
 const TallyEmbed: React.FC<TallyEmbedProps> = ({
   formId,
-  width = '50%',
+  width = '100%',
   height = '500px',
   className = ''
 }) => {
   useEffect(() => {
-    // Load Tally embed script
     const script = document.createElement('script');
     script.src = 'https://tally.so/widgets/embed.js';
     script.async = true;
@@ -32,12 +31,19 @@ const TallyEmbed: React.FC<TallyEmbedProps> = ({
 
   return (
     <iframe
-      data-tally-src={`https://tally.so/embed/${formId}?alignLeft=1&hideTitle=1&transparentBackground=1`}
+      data-tally-src={`https://tally.so/embed/${formId}?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&darkMode=1`}
       width={width}
       height={height}
-      className={className}
-      title="Tally Form"
-      style={{ border: 'none', borderRadius: '8px' }}
+      className={`rounded-md border border-input bg-background ${className}`}
+      frameBorder="0"
+      title="Contact Form"
+      style={{
+        minWidth: '100%',
+        maxWidth: '100%',
+        border: '1px solid var(--input)',
+        borderRadius: '0.5rem',
+        background: 'var(--background)',
+      }}
     ></iframe>
   );
 };
