@@ -1,9 +1,17 @@
 "use client"
-
+import React from "react"
 import { useState } from "react"
 import { ArrowRight, CheckCircle2, Code, LineChart, Lightbulb, Rocket, Server, Users, Menu, X, Mail, Phone, MapPin, Star } from "lucide-react"
+import { isWeb3Available } from '../utils/web3'
 
-const Button = ({ children, variant = "default", size = "default", asChild, ...props }) => {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'default' | 'outline' | 'ghost'
+  size?: 'default' | 'lg'
+  asChild?: boolean
+  children: React.ReactNode
+}
+
+const Button = ({ children, variant = "default", size = "default", asChild, ...props }: ButtonProps) => {
   const baseStyles = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background"
   const variants = {
     default: "bg-primary text-primary-foreground hover:bg-primary/90",
@@ -25,62 +33,102 @@ const Button = ({ children, variant = "default", size = "default", asChild, ...p
   )
 }
 
-const Card = ({ children, className = "" }) => (
+interface CardProps {
+  children: React.ReactNode
+  className?: string
+}
+
+const Card = ({ children, className = "" }: CardProps) => (
   <div className={`rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow ${className}`}>
     {children}
   </div>
 )
 
-const CardHeader = ({ children }) => (
-  <div className="flex flex-col space-y-1.5 p-6 pb-2">{children}</div>
+const CardHeader = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div className={`flex flex-col space-y-1.5 p-6 pb-2 ${className}`}>{children}</div>
 )
 
-const CardTitle = ({ children }) => (
-  <h3 className="text-2xl font-semibold leading-none tracking-tight">{children}</h3>
+const CardTitle = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <h3 className={`text-2xl font-semibold leading-none tracking-tight ${className}`}>{children}</h3>
 )
 
-const CardContent = ({ children }) => (
-  <div className="p-6 pt-0">{children}</div>
+const CardContent = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div className={`p-6 pt-0 ${className}`}>{children}</div>
 )
 
-const Tabs = ({ children, defaultValue }) => {
+interface TabsProps {
+  children: React.ReactElement[]
+  defaultValue: string
+}
+
+const Tabs = ({ children, defaultValue }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(defaultValue)
-  
+
   return (
     <div data-active-tab={activeTab} className="w-full">
-      {children.map(child => 
-        child.type.name === 'TabsList' 
-          ? { ...child, props: { ...child.props, setActiveTab, activeTab } }
-          : child.type.name === 'TabsContent' 
-            ? { ...child, props: { ...child.props, activeTab } }
-            : child
-      )}
+      {React.Children.map(children, child => {
+        if (React.isValidElement(child)) {
+          if ((child.type as any).displayName === "TabsList") {
+            return React.cloneElement(child as React.ReactElement<any>, { setActiveTab, activeTab })
+          }
+          if ((child.type as any).displayName === "TabsContent") {
+            return React.cloneElement(child as React.ReactElement<any>, { activeTab })
+          }
+          return child
+        }
+        return null
+      })}
     </div>
   )
 }
 
-const TabsList = ({ children, setActiveTab, activeTab }) => (
-  <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground grid grid-cols-2 w-full">
-    {children.map((child, index) => 
-      <button
-        key={index}
-        onClick={() => setActiveTab(child.props.value)}
-        className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-          activeTab === child.props.value 
-            ? 'bg-background text-foreground shadow-sm' 
-            : 'hover:bg-background/50'
-        }`}
-      >
-        {child.props.children}
-      </button>
-    )}
-  </div>
-)
+interface TabsListProps {
+  children: React.ReactElement<TabsTriggerProps>[]
+  setActiveTab?: (value: string) => void
+  activeTab?: string
+}
 
-const TabsTrigger = ({ value, children }) => children
+interface TabsTriggerProps {
+  value: string
+  children: React.ReactNode
+}
+const TabsTrigger: React.FC<TabsTriggerProps> = ({ value, children }) => <>{children}</>;
 
-const TabsContent = ({ value, activeTab, children }) => 
-  activeTab === value ? <div className="mt-6">{children}</div> : null
+interface TabsContentProps {
+  value: string
+  activeTab?: string
+  children: React.ReactNode
+}
+const TabsContent: React.FC<TabsContentProps> & { displayName?: string } = ({ value, activeTab, children }) =>
+  activeTab === value ? <div className="mt-6">{children}</div> : null;
+TabsContent.displayName = "TabsContent";
+
+const TabsList: React.FC<TabsListProps> & { displayName?: string } = (props) => {
+  const { children, setActiveTab, activeTab } = props;
+  return (
+    <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground grid grid-cols-2 w-full">
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child) && setActiveTab && activeTab !== undefined) {
+          return (
+            <button
+              key={child.props.value}
+              onClick={() => setActiveTab(child.props.value)}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                activeTab === child.props.value 
+                  ? 'bg-background text-foreground shadow-sm' 
+                  : 'hover:bg-background/50'
+              }`}
+            >
+              {child.props.children}
+            </button>
+          )
+        }
+        return null
+      })}
+    </div>
+  )
+};
+TabsList.displayName = "TabsList";
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -100,6 +148,15 @@ export default function Home() {
     }
   ]
 
+  // Example web3 interaction:
+  const connectWallet = async () => {
+    if (!isWeb3Available()) {
+      console.log('Web3 is not available')
+      return
+    }
+    // web3 code here
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -116,7 +173,7 @@ export default function Home() {
             {['Services', 'How We Help', 'Target Market', 'Testimonials', 'Contact'].map((item) => (
               <a 
                 key={item}
-                href={`#${item.toLowerCase().replace(' ', '-')}`} 
+                href={`#${item.toLowerCase().replace(/ /g, '-')}`} // Updated regex to replace all spaces
                 className="text-sm font-medium hover:text-primary transition-colors relative group"
               >
                 {item}
@@ -144,7 +201,7 @@ export default function Home() {
               {['Services', 'How We Help', 'Target Market', 'Testimonials', 'Contact'].map((item) => (
                 <a 
                   key={item}
-                  href={`#${item.toLowerCase().replace(' ', '-')}`}
+                  href={`#${item.toLowerCase().replace(/ /g, '-')}`} // Updated regex to replace all spaces
                   className="text-sm font-medium hover:text-primary transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -411,15 +468,15 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials Section */}
+        {/* Testimonials Section
         <section id="testimonials" className="w-full py-12 md:py-24 bg-muted/30">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
                   Client Success
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">What Our Clients Say</h2>
+                </div> */}
+                {/* <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">What Our Clients Say</h2>
                 <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed">
                   Don't just take our word for it. Here's what our satisfied clients have to say about working with Viquoe.
                 </p>
@@ -443,7 +500,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Contact Section */}
         <section id="contact" className="w-full py-12 md:py-24">
@@ -499,7 +556,7 @@ export default function Home() {
                     />
                     <textarea 
                       placeholder="Your Message"
-                      rows="4"
+                      rows={4}
                       className="w-full p-3 border border-input rounded-md bg-background resize-none"
                     ></textarea>
                     <Button className="w-full">
