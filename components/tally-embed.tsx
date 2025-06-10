@@ -31,20 +31,20 @@ const TallyEmbed: React.FC<TallyEmbedProps> = ({
 
   return (
     <iframe
-      data-tally-src={`https://tally.so/embed/${formId}?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&darkMode=1`}
-      width={width}
-      height={height}
-      className={`rounded-md border border-input bg-background ${className}`}
-      frameBorder="0"
-      title="Contact Form"
-      style={{
-        minWidth: '100%',
-        maxWidth: '100%',
-        border: '1px solid var(--input)',
-        borderRadius: '0.5rem',
-        background: 'var(--background)',
-      }}
-    ></iframe>
+  data-tally-src={`https://tally.so/embed/${formId}?alignLeft=1&hideTitle=1&dynamicHeight=1&darkMode=1`}
+  width={width}
+  height={height}
+  className={`rounded-md border border-input bg-background ${className}`}
+  frameBorder="0"
+  title="Contact Form"
+  style={{
+    minWidth: '100%',
+    maxWidth: '100%',
+    border: '1px solid var(--input)',
+    borderRadius: '0.1rem',
+    colorScheme: 'dark', // This hints to the browser about dark mode
+  }}
+/>
   );
 };
 

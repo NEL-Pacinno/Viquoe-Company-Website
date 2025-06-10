@@ -526,11 +526,11 @@ export default function Home() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-primary" />
-                    <span>contact@viquoe.com</span>
+                    <span>viquoesolution@gmail.com</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Phone className="h-5 w-5 text-primary" />
-                    <span>+234 (0) 123 456 7890</span>
+                    <span>+2348135293150</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <MapPin className="h-5 w-5 text-primary" />
@@ -546,7 +546,7 @@ export default function Home() {
                 <CardContent>
                   <form className="space-y-4">
                     <TallyEmbed 
-                      formId="wd4D5r"
+                      formId="mBVA95"
                       height="500px"
                       className="w-full bg-background shadow-sm hover:shadow-md transition-shadow dark:border-gray-800"
                     />
